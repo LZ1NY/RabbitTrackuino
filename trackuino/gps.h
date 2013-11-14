@@ -19,6 +19,11 @@
 #define __GPS_H__
 
 #include <stdint.h>
+#include <SoftwareSerial.h>
+#include <HardwareSerial.h>
+
+extern SoftwareSerial mySerial;
+extern HardwareSerial &GPS ;
 
 extern char gps_time[7];       // HHMMSS
 extern uint32_t gps_seconds;   // seconds after midnight
@@ -31,7 +36,10 @@ extern float gps_course;
 extern float gps_speed;
 extern float gps_altitude;
 
+
 void gps_setup();
 bool gps_decode(char c);
-
+bool getUBX_ACK(uint8_t* );
+void sendUBX(uint8_t* , uint8_t);
+void offs(void);
 #endif

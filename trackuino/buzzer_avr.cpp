@@ -28,16 +28,34 @@
 #include <avr/interrupt.h>
 #include <avr/io.h>
 
+#include <SoftwareSerial.h>
+extern SoftwareSerial mySerial;
 
 // Module constants
 static const unsigned long PWM_PERIOD = F_CPU / BUZZER_FREQ;
 static const unsigned long ON_CYCLES = BUZZER_FREQ * BUZZER_ON_TIME;
 static const unsigned long OFF_CYCLES = BUZZER_FREQ * BUZZER_OFF_TIME;
+
+static const unsigned long PWM_PERIOD1 = F_CPU / BUZZER_FREQ1;
+static const unsigned long ON_CYCLES1 = BUZZER_FREQ1 * BUZZER_ON_TIME;
+static const unsigned long OFF_CYCLES1 = BUZZER_FREQ1 * BUZZER_OFF_TIME;
+
+int fff=0;
+
+
+boolean whichf=1;
+
+
+
+
+
 #if BUZZER_TYPE == 0  // active buzzer
 static const uint16_t DUTY_CYCLE = PWM_PERIOD;
+static const uint16_t DUTY_CYCLE1 = PWM_PERIOD1;
 #endif
 #if BUZZER_TYPE == 1  // passive buzzer
 static const uint16_t DUTY_CYCLE = PWM_PERIOD / 2;
+static const uint16_t DUTY_CYCLE1 = PWM_PERIOD1 / 2;
 #endif
 
 // Module variables
@@ -59,8 +77,10 @@ void buzzer_setup()
   TCCR1B = _BV(WGM13) | _BV(WGM12);
 
   // Set top to PWM_PERIOD
-  ICR1 = PWM_PERIOD;
-
+  //ICR1 = PWM_PERIOD;
+  if (whichf) ICR1 = PWM_PERIOD;
+  else ICR1 = PWM_PERIOD1;
+  
   // Enable interrupts on timer overflow
   TIMSK1 |= _BV(TOIE1);
 
@@ -84,21 +104,31 @@ ISR (TIMER1_OVF_vect)
 {
   alarm--;
   if (alarm == 0) {
+//     mySerial.println(fff);
+//     mySerial.println(whichf);
+//     mySerial.println("----");
+    if (fff%2) whichf = !whichf; 
     buzzing = !buzzing;
     if (is_buzzer_on && buzzing) {
       switch(BUZZER_PIN) {
         case 9:
           // Non-inverting pin 9 (COM1A=2), p.135
           TCCR1A |= _BV(COM1A1);
-          OCR1A = DUTY_CYCLE;
+          if (whichf ) OCR1A = DUTY_CYCLE;
+          else OCR1A = DUTY_CYCLE1;
           break;
         case 10:
           // Non-inverting pin 10 (COM1B=2), p.135
           TCCR1A |= _BV(COM1B1);
-          OCR1B = DUTY_CYCLE;
+          if (whichf ) OCR1B = DUTY_CYCLE;
+          else OCR1B = DUTY_CYCLE1;
           break;
       }
-      alarm = ON_CYCLES;
+
+      
+      if (whichf)      alarm = ON_CYCLES;
+      else             alarm = ON_CYCLES1;
+      
     } else {
       switch(BUZZER_PIN) {
         // Disable PWM on pin 9/10
@@ -106,8 +136,14 @@ ISR (TIMER1_OVF_vect)
         case 10: TCCR1A &= ~_BV(COM1B1); break;
       }
       pin_write(BUZZER_PIN, LOW);
-      alarm = OFF_CYCLES;
+            //alarm = OFF_CYCLES;
+      if (whichf)       alarm = OFF_CYCLES;
+      else              alarm = OFF_CYCLES1;  
     }
+    
+    fff++;
+    //if (fff%2) whichf = !whichf; 
+    //whichf = !whichf; 
   }
 }
 

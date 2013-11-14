@@ -39,8 +39,28 @@
 // - Cars:       9
 // - Home:       0
 // - IGate:      5
-#define S_CALLSIGN      "LZ1NY"
-#define S_CALLSIGN_ID   11
+
+#define __BALLOON__
+
+
+#ifdef __BALLOON__
+ #define S_CALLSIGN      "LZ0SKY"
+ #define S_CALLSIGN_ID   11
+ #define SYMBOL_TABLE   '/'
+ #define SYMBOL  'O'    // balloon
+ #define APRS_COMMENT    "Rabbit1 on the air"
+ //#define APRS_COMMENT    "Pre-flight"
+#endif
+
+
+#ifndef __BALLOON__
+ #define S_CALLSIGN      "LZ1NY"
+ #define S_CALLSIGN_ID   5
+ #define SYMBOL_TABLE   '/'
+ #define SYMBOL  '-'    // QTH
+ #define APRS_COMMENT    "Trackuino test"
+#endif
+
 
 // Destination callsign: APRS (with SSID=0) is usually okay.
 #define D_CALLSIGN      "APRS"
@@ -56,7 +76,7 @@
 // APRS comment: this goes in the comment portion of the APRS message. You
 // might want to keep this short. The longer the packet, the more vulnerable
 // it is to noise. 
-#define APRS_COMMENT    "Trackuino test"
+
 
 
 // --------------------------------------------------------------------------
@@ -135,9 +155,10 @@
 // Pin mappings for the internal / external temperature sensors. VS refers
 // to (arduino) digital pins, whereas VOUT refers to (arduino) analog pins.
 #define INTERNAL_LM60_VS_PIN     6
-#define INTERNAL_LM60_VOUT_PIN   0
+#define INTERNAL_LM60_VOUT_PIN   1
+
 #define EXTERNAL_LM60_VS_PIN     7
-#define EXTERNAL_LM60_VOUT_PIN   1
+#define EXTERNAL_LM60_VOUT_PIN   0
 
 // Units for temperature sensors (Added by: Kyle Crockett)
 // 1 = Celsius, 2 = Kelvin, 3 = Fahrenheit
@@ -148,7 +169,7 @@
 
 // Resistors divider for the voltage meter (ohms)
 #define VMETER_R1       10000
-#define VMETER_R2       3300
+#define VMETER_R2       3900
 
 // Voltage meter analog pin
 #define VMETER_PIN      2
@@ -167,8 +188,8 @@
 // it must be between L and 65535, where L = F_CPU / 65535 and F_CPU is the
 // clock rate in hertzs. For 16 MHz Arduinos, this gives a lower limit of 
 // 245 Hz.
-#define BUZZER_FREQ             895     // Hz
-
+#define BUZZER_FREQ            400     // Hz
+#define BUZZER_FREQ1             2000     // Hz
 // These are the number of seconds the buzzer will stay on/off alternately
 #define BUZZER_ON_TIME          1       // secs
 #define BUZZER_OFF_TIME         2       // secs
@@ -202,12 +223,11 @@
 // 3. When flashing the firmware, disconnect the GPS from the RX pin or you
 //    will get errors.
 
-// #define DEBUG_GPS    // GPS sentence dump and checksum validation
-// #define DEBUG_AX25   // AX.25 frame dump
-// #define DEBUG_MODEM  // Modem ISR overrun and profiling
-// #define DEBUG_RESET  // AVR reset
-// #define DEBUG_SENS   // Sensors
-
+ #define DEBUG_GPS    // GPS sentence dump and checksum validation
+ #define DEBUG_AX25   // AX.25 frame dump
+ #define DEBUG_MODEM  // Modem ISR overrun and profiling
+ #define DEBUG_RESET  // AVR reset
+ #define DEBUG_SENS   // Sensors
 
 #endif
 

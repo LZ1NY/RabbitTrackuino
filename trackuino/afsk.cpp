@@ -178,25 +178,25 @@ end_isr:
 #ifdef DEBUG_MODEM
 void afsk_debug()
 {
-  Serial.print("t(fast,avg,slow)=");
-  Serial.print(fast_isr_time);
-  Serial.print(",");
+  mySerial.print("t(fast,avg,slow)=");
+  mySerial.print(fast_isr_time);
+  mySerial.print(",");
   if (isr_calls)
-    Serial.print(avg_isr_time / isr_calls);
+    mySerial.print(avg_isr_time / isr_calls);
   else
-    Serial.print("INF");
-  Serial.print(",");
-  Serial.print(slow_isr_time);
-  Serial.print("; pos=");
-  Serial.print(slow_packet_pos);
-  Serial.print("/");
-  Serial.print(afsk_packet_size);
-  Serial.print("; sam=");
-  Serial.print(slow_sample_in_baud, DEC);
-  Serial.print("; overruns/isr=");
-  Serial.print(overruns);
-  Serial.print("/");
-  Serial.println(isr_calls);
+    mySerial.print("INF");
+  mySerial.print(",");
+  mySerial.print(slow_isr_time);
+  mySerial.print("; pos=");
+  mySerial.print(slow_packet_pos);
+  mySerial.print("/");
+  mySerial.print(afsk_packet_size);
+  mySerial.print("; sam=");
+  mySerial.print(slow_sample_in_baud, DEC);
+  mySerial.print("; overruns/isr=");
+  mySerial.print(overruns);
+  mySerial.print("/");
+  mySerial.println(isr_calls);
 
   isr_calls = 0;
   avg_isr_time = 0;

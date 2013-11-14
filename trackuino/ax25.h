@@ -17,6 +17,8 @@
 
 #ifndef __AX25_H__
 #define __AX25_H__
+#include <SoftwareSerial.h>
+extern SoftwareSerial mySerial;
 
 struct s_address {
 	char callsign[7];

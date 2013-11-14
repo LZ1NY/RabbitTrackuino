@@ -24,6 +24,10 @@
 #include <avr/pgmspace.h>
 #include "config.h"
 
+
+
+#include <SoftwareSerial.h>
+extern SoftwareSerial mySerial;
 // Exported consts
 extern const uint32_t MODEM_CLOCK_RATE;
 extern const uint8_t REST_DUTY;
